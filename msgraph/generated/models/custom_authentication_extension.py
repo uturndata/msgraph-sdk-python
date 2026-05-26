@@ -10,7 +10,9 @@ if TYPE_CHECKING:
     from .on_attribute_collection_start_custom_extension import OnAttributeCollectionStartCustomExtension
     from .on_attribute_collection_submit_custom_extension import OnAttributeCollectionSubmitCustomExtension
     from .on_otp_send_custom_extension import OnOtpSendCustomExtension
+    from .on_password_submit_custom_extension import OnPasswordSubmitCustomExtension
     from .on_token_issuance_start_custom_extension import OnTokenIssuanceStartCustomExtension
+    from .on_verified_id_claim_validation_custom_extension import OnVerifiedIdClaimValidationCustomExtension
 
 from .custom_callout_extension import CustomCalloutExtension
 
@@ -47,10 +49,18 @@ class CustomAuthenticationExtension(CustomCalloutExtension, Parsable):
             from .on_otp_send_custom_extension import OnOtpSendCustomExtension
 
             return OnOtpSendCustomExtension()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.onPasswordSubmitCustomExtension".casefold():
+            from .on_password_submit_custom_extension import OnPasswordSubmitCustomExtension
+
+            return OnPasswordSubmitCustomExtension()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.onTokenIssuanceStartCustomExtension".casefold():
             from .on_token_issuance_start_custom_extension import OnTokenIssuanceStartCustomExtension
 
             return OnTokenIssuanceStartCustomExtension()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.onVerifiedIdClaimValidationCustomExtension".casefold():
+            from .on_verified_id_claim_validation_custom_extension import OnVerifiedIdClaimValidationCustomExtension
+
+            return OnVerifiedIdClaimValidationCustomExtension()
         return CustomAuthenticationExtension()
     
     def get_field_deserializers(self,) -> dict[str, Callable[[ParseNode], None]]:
@@ -63,14 +73,18 @@ class CustomAuthenticationExtension(CustomCalloutExtension, Parsable):
         from .on_attribute_collection_start_custom_extension import OnAttributeCollectionStartCustomExtension
         from .on_attribute_collection_submit_custom_extension import OnAttributeCollectionSubmitCustomExtension
         from .on_otp_send_custom_extension import OnOtpSendCustomExtension
+        from .on_password_submit_custom_extension import OnPasswordSubmitCustomExtension
         from .on_token_issuance_start_custom_extension import OnTokenIssuanceStartCustomExtension
+        from .on_verified_id_claim_validation_custom_extension import OnVerifiedIdClaimValidationCustomExtension
 
         from .custom_callout_extension import CustomCalloutExtension
         from .custom_extension_behavior_on_error import CustomExtensionBehaviorOnError
         from .on_attribute_collection_start_custom_extension import OnAttributeCollectionStartCustomExtension
         from .on_attribute_collection_submit_custom_extension import OnAttributeCollectionSubmitCustomExtension
         from .on_otp_send_custom_extension import OnOtpSendCustomExtension
+        from .on_password_submit_custom_extension import OnPasswordSubmitCustomExtension
         from .on_token_issuance_start_custom_extension import OnTokenIssuanceStartCustomExtension
+        from .on_verified_id_claim_validation_custom_extension import OnVerifiedIdClaimValidationCustomExtension
 
         fields: dict[str, Callable[[Any], None]] = {
             "behaviorOnError": lambda n : setattr(self, 'behavior_on_error', n.get_object_value(CustomExtensionBehaviorOnError)),

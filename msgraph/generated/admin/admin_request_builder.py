@@ -16,12 +16,15 @@ from warnings import warn
 if TYPE_CHECKING:
     from ..models.admin import Admin
     from ..models.o_data_errors.o_data_error import ODataError
+    from .configuration_management.configuration_management_request_builder import ConfigurationManagementRequestBuilder
     from .edge.edge_request_builder import EdgeRequestBuilder
+    from .exchange.exchange_request_builder import ExchangeRequestBuilder
     from .microsoft365_apps.microsoft365_apps_request_builder import Microsoft365AppsRequestBuilder
     from .people.people_request_builder import PeopleRequestBuilder
     from .report_settings.report_settings_request_builder import ReportSettingsRequestBuilder
     from .service_announcement.service_announcement_request_builder import ServiceAnnouncementRequestBuilder
     from .sharepoint.sharepoint_request_builder import SharepointRequestBuilder
+    from .teams.teams_request_builder import TeamsRequestBuilder
 
 class AdminRequestBuilder(BaseRequestBuilder):
     """
@@ -116,6 +119,15 @@ class AdminRequestBuilder(BaseRequestBuilder):
         return AdminRequestBuilder(self.request_adapter, raw_url)
     
     @property
+    def configuration_management(self) -> ConfigurationManagementRequestBuilder:
+        """
+        Provides operations to manage the configurationManagement property of the microsoft.graph.admin entity.
+        """
+        from .configuration_management.configuration_management_request_builder import ConfigurationManagementRequestBuilder
+
+        return ConfigurationManagementRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
     def edge(self) -> EdgeRequestBuilder:
         """
         Provides operations to manage the edge property of the microsoft.graph.admin entity.
@@ -123,6 +135,15 @@ class AdminRequestBuilder(BaseRequestBuilder):
         from .edge.edge_request_builder import EdgeRequestBuilder
 
         return EdgeRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
+    def exchange(self) -> ExchangeRequestBuilder:
+        """
+        Provides operations to manage the exchange property of the microsoft.graph.admin entity.
+        """
+        from .exchange.exchange_request_builder import ExchangeRequestBuilder
+
+        return ExchangeRequestBuilder(self.request_adapter, self.path_parameters)
     
     @property
     def microsoft365_apps(self) -> Microsoft365AppsRequestBuilder:
@@ -168,6 +189,15 @@ class AdminRequestBuilder(BaseRequestBuilder):
         from .sharepoint.sharepoint_request_builder import SharepointRequestBuilder
 
         return SharepointRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
+    def teams(self) -> TeamsRequestBuilder:
+        """
+        Provides operations to manage the teams property of the microsoft.graph.admin entity.
+        """
+        from .teams.teams_request_builder import TeamsRequestBuilder
+
+        return TeamsRequestBuilder(self.request_adapter, self.path_parameters)
     
     @dataclass
     class AdminRequestBuilderGetQueryParameters():

@@ -7,6 +7,7 @@ from typing import Any, Optional, TYPE_CHECKING, Union
 from uuid import UUID
 
 if TYPE_CHECKING:
+    from .assigned_label import AssignedLabel
     from .column_definition import ColumnDefinition
     from .drive import Drive
     from .entity import Entity
@@ -16,13 +17,17 @@ if TYPE_CHECKING:
     from .file_storage_container_viewpoint import FileStorageContainerViewpoint
     from .permission import Permission
     from .recycle_bin import RecycleBin
+    from .share_point_group import SharePointGroup
+    from .share_point_migration_job import SharePointMigrationJob
     from .site_lock_state import SiteLockState
 
 from .entity import Entity
 
 @dataclass
 class FileStorageContainer(Entity, Parsable):
-    # The columns property
+    # Sensitivity label assigned to the fileStorageContainer. Read-write.
+    assigned_sensitivity_label: Optional[AssignedLabel] = None
+    # The set of custom structured metadata supported by the fileStorageContainer. Read-write.
     columns: Optional[list[ColumnDefinition]] = None
     # Container type ID of the fileStorageContainer. For details about container types, see Container Types. Each container must have only one container type. Read-only.
     container_type_id: Optional[UUID] = None
@@ -38,6 +43,8 @@ class FileStorageContainer(Entity, Parsable):
     drive: Optional[Drive] = None
     # Indicates the lock state of the fileStorageContainer. The possible values are unlocked and lockedReadOnly. Read-only.
     lock_state: Optional[SiteLockState] = None
+    # The collection of sharePointMigrationJob objects local to the container. Read-write.
+    migration_jobs: Optional[list[SharePointMigrationJob]] = None
     # The OdataType property
     odata_type: Optional[str] = None
     # The set of permissions for users in the fileStorageContainer. Permission for each user is set by the roles property. The possible values are: reader, writer, manager, and owner. Read-write.
@@ -46,6 +53,8 @@ class FileStorageContainer(Entity, Parsable):
     recycle_bin: Optional[RecycleBin] = None
     # The settings property
     settings: Optional[FileStorageContainerSettings] = None
+    # The collection of sharePointGroup objects local to the container. Read-write.
+    share_point_groups: Optional[list[SharePointGroup]] = None
     # Status of the fileStorageContainer. Containers are created as inactive and require activation. Inactive containers are subjected to automatic deletion in 24 hours. The possible values are: inactive, active. Read-only.
     status: Optional[FileStorageContainerStatus] = None
     # Data specific to the current user. Read-only.
@@ -67,6 +76,7 @@ class FileStorageContainer(Entity, Parsable):
         The deserialization information for the current model
         Returns: dict[str, Callable[[ParseNode], None]]
         """
+        from .assigned_label import AssignedLabel
         from .column_definition import ColumnDefinition
         from .drive import Drive
         from .entity import Entity
@@ -76,8 +86,11 @@ class FileStorageContainer(Entity, Parsable):
         from .file_storage_container_viewpoint import FileStorageContainerViewpoint
         from .permission import Permission
         from .recycle_bin import RecycleBin
+        from .share_point_group import SharePointGroup
+        from .share_point_migration_job import SharePointMigrationJob
         from .site_lock_state import SiteLockState
 
+        from .assigned_label import AssignedLabel
         from .column_definition import ColumnDefinition
         from .drive import Drive
         from .entity import Entity
@@ -87,9 +100,12 @@ class FileStorageContainer(Entity, Parsable):
         from .file_storage_container_viewpoint import FileStorageContainerViewpoint
         from .permission import Permission
         from .recycle_bin import RecycleBin
+        from .share_point_group import SharePointGroup
+        from .share_point_migration_job import SharePointMigrationJob
         from .site_lock_state import SiteLockState
 
         fields: dict[str, Callable[[Any], None]] = {
+            "assignedSensitivityLabel": lambda n : setattr(self, 'assigned_sensitivity_label', n.get_object_value(AssignedLabel)),
             "columns": lambda n : setattr(self, 'columns', n.get_collection_of_object_values(ColumnDefinition)),
             "containerTypeId": lambda n : setattr(self, 'container_type_id', n.get_uuid_value()),
             "createdDateTime": lambda n : setattr(self, 'created_date_time', n.get_datetime_value()),
@@ -98,9 +114,11 @@ class FileStorageContainer(Entity, Parsable):
             "displayName": lambda n : setattr(self, 'display_name', n.get_str_value()),
             "drive": lambda n : setattr(self, 'drive', n.get_object_value(Drive)),
             "lockState": lambda n : setattr(self, 'lock_state', n.get_enum_value(SiteLockState)),
+            "migrationJobs": lambda n : setattr(self, 'migration_jobs', n.get_collection_of_object_values(SharePointMigrationJob)),
             "permissions": lambda n : setattr(self, 'permissions', n.get_collection_of_object_values(Permission)),
             "recycleBin": lambda n : setattr(self, 'recycle_bin', n.get_object_value(RecycleBin)),
             "settings": lambda n : setattr(self, 'settings', n.get_object_value(FileStorageContainerSettings)),
+            "sharePointGroups": lambda n : setattr(self, 'share_point_groups', n.get_collection_of_object_values(SharePointGroup)),
             "status": lambda n : setattr(self, 'status', n.get_enum_value(FileStorageContainerStatus)),
             "viewpoint": lambda n : setattr(self, 'viewpoint', n.get_object_value(FileStorageContainerViewpoint)),
         }
@@ -117,6 +135,7 @@ class FileStorageContainer(Entity, Parsable):
         if writer is None:
             raise TypeError("writer cannot be null.")
         super().serialize(writer)
+        writer.write_object_value("assignedSensitivityLabel", self.assigned_sensitivity_label)
         writer.write_collection_of_object_values("columns", self.columns)
         writer.write_uuid_value("containerTypeId", self.container_type_id)
         writer.write_datetime_value("createdDateTime", self.created_date_time)
@@ -125,9 +144,11 @@ class FileStorageContainer(Entity, Parsable):
         writer.write_str_value("displayName", self.display_name)
         writer.write_object_value("drive", self.drive)
         writer.write_enum_value("lockState", self.lock_state)
+        writer.write_collection_of_object_values("migrationJobs", self.migration_jobs)
         writer.write_collection_of_object_values("permissions", self.permissions)
         writer.write_object_value("recycleBin", self.recycle_bin)
         writer.write_object_value("settings", self.settings)
+        writer.write_collection_of_object_values("sharePointGroups", self.share_point_groups)
         writer.write_enum_value("status", self.status)
         writer.write_object_value("viewpoint", self.viewpoint)
     

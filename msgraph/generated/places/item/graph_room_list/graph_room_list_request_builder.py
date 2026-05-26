@@ -16,7 +16,9 @@ from warnings import warn
 if TYPE_CHECKING:
     from ....models.o_data_errors.o_data_error import ODataError
     from ....models.room_list import RoomList
+    from .check_ins.check_ins_request_builder import CheckInsRequestBuilder
     from .rooms.rooms_request_builder import RoomsRequestBuilder
+    from .workspaces.workspaces_request_builder import WorkspacesRequestBuilder
 
 class GraphRoomListRequestBuilder(BaseRequestBuilder):
     """
@@ -33,9 +35,10 @@ class GraphRoomListRequestBuilder(BaseRequestBuilder):
     
     async def get(self,request_configuration: Optional[RequestConfiguration[GraphRoomListRequestBuilderGetQueryParameters]] = None) -> Optional[RoomList]:
         """
-        Get the item of type microsoft.graph.place as microsoft.graph.roomList
+        Read the properties of a place object specified by its ID. The place object can be one of the following types: The listed resources are derived from the place object.
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: Optional[RoomList]
+        Find more info here: https://learn.microsoft.com/graph/api/place-get?view=graph-rest-1.0
         """
         request_info = self.to_get_request_information(
             request_configuration
@@ -53,7 +56,7 @@ class GraphRoomListRequestBuilder(BaseRequestBuilder):
     
     def to_get_request_information(self,request_configuration: Optional[RequestConfiguration[GraphRoomListRequestBuilderGetQueryParameters]] = None) -> RequestInformation:
         """
-        Get the item of type microsoft.graph.place as microsoft.graph.roomList
+        Read the properties of a place object specified by its ID. The place object can be one of the following types: The listed resources are derived from the place object.
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: RequestInformation
         """
@@ -73,6 +76,15 @@ class GraphRoomListRequestBuilder(BaseRequestBuilder):
         return GraphRoomListRequestBuilder(self.request_adapter, raw_url)
     
     @property
+    def check_ins(self) -> CheckInsRequestBuilder:
+        """
+        Provides operations to manage the checkIns property of the microsoft.graph.place entity.
+        """
+        from .check_ins.check_ins_request_builder import CheckInsRequestBuilder
+
+        return CheckInsRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
     def rooms(self) -> RoomsRequestBuilder:
         """
         Provides operations to manage the rooms property of the microsoft.graph.roomList entity.
@@ -81,10 +93,19 @@ class GraphRoomListRequestBuilder(BaseRequestBuilder):
 
         return RoomsRequestBuilder(self.request_adapter, self.path_parameters)
     
+    @property
+    def workspaces(self) -> WorkspacesRequestBuilder:
+        """
+        Provides operations to manage the workspaces property of the microsoft.graph.roomList entity.
+        """
+        from .workspaces.workspaces_request_builder import WorkspacesRequestBuilder
+
+        return WorkspacesRequestBuilder(self.request_adapter, self.path_parameters)
+    
     @dataclass
     class GraphRoomListRequestBuilderGetQueryParameters():
         """
-        Get the item of type microsoft.graph.place as microsoft.graph.roomList
+        Read the properties of a place object specified by its ID. The place object can be one of the following types: The listed resources are derived from the place object.
         """
         def get_query_parameter(self,original_name: str) -> str:
             """

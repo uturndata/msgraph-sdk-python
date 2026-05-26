@@ -8,10 +8,13 @@ from typing import Any, Optional, TYPE_CHECKING, Union
 if TYPE_CHECKING:
     from .admin_microsoft365_apps import AdminMicrosoft365Apps
     from .admin_report_settings import AdminReportSettings
+    from .configuration_management import ConfigurationManagement
     from .edge import Edge
+    from .exchange_admin import ExchangeAdmin
     from .people_admin_settings import PeopleAdminSettings
     from .service_announcement import ServiceAnnouncement
     from .sharepoint import Sharepoint
+    from .teams_administration.teams_admin_root import TeamsAdminRoot
 
 @dataclass
 class Admin(AdditionalDataHolder, BackedModel, Parsable):
@@ -20,8 +23,12 @@ class Admin(AdditionalDataHolder, BackedModel, Parsable):
 
     # Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.
     additional_data: dict[str, Any] = field(default_factory=dict)
+    # A container for Tenant Configuration Management (TCM) resources. Read-only.
+    configuration_management: Optional[ConfigurationManagement] = None
     # A container for Microsoft Edge resources. Read-only.
     edge: Optional[Edge] = None
+    # A container for the Exchange admin functionality. Read-only.
+    exchange: Optional[ExchangeAdmin] = None
     # A container for the Microsoft 365 apps admin functionality.
     microsoft365_apps: Optional[AdminMicrosoft365Apps] = None
     # The OdataType property
@@ -34,6 +41,8 @@ class Admin(AdditionalDataHolder, BackedModel, Parsable):
     service_announcement: Optional[ServiceAnnouncement] = None
     # The sharepoint property
     sharepoint: Optional[Sharepoint] = None
+    # A container for Teams administration functionalities, such as Teams telephone number management functionalities, user Teams configurations, and policy assignments.
+    teams: Optional[TeamsAdminRoot] = None
     
     @staticmethod
     def create_from_discriminator_value(parse_node: ParseNode) -> Admin:
@@ -53,26 +62,35 @@ class Admin(AdditionalDataHolder, BackedModel, Parsable):
         """
         from .admin_microsoft365_apps import AdminMicrosoft365Apps
         from .admin_report_settings import AdminReportSettings
+        from .configuration_management import ConfigurationManagement
         from .edge import Edge
+        from .exchange_admin import ExchangeAdmin
         from .people_admin_settings import PeopleAdminSettings
         from .service_announcement import ServiceAnnouncement
         from .sharepoint import Sharepoint
+        from .teams_administration.teams_admin_root import TeamsAdminRoot
 
         from .admin_microsoft365_apps import AdminMicrosoft365Apps
         from .admin_report_settings import AdminReportSettings
+        from .configuration_management import ConfigurationManagement
         from .edge import Edge
+        from .exchange_admin import ExchangeAdmin
         from .people_admin_settings import PeopleAdminSettings
         from .service_announcement import ServiceAnnouncement
         from .sharepoint import Sharepoint
+        from .teams_administration.teams_admin_root import TeamsAdminRoot
 
         fields: dict[str, Callable[[Any], None]] = {
+            "configurationManagement": lambda n : setattr(self, 'configuration_management', n.get_object_value(ConfigurationManagement)),
             "edge": lambda n : setattr(self, 'edge', n.get_object_value(Edge)),
+            "exchange": lambda n : setattr(self, 'exchange', n.get_object_value(ExchangeAdmin)),
             "microsoft365Apps": lambda n : setattr(self, 'microsoft365_apps', n.get_object_value(AdminMicrosoft365Apps)),
             "@odata.type": lambda n : setattr(self, 'odata_type', n.get_str_value()),
             "people": lambda n : setattr(self, 'people', n.get_object_value(PeopleAdminSettings)),
             "reportSettings": lambda n : setattr(self, 'report_settings', n.get_object_value(AdminReportSettings)),
             "serviceAnnouncement": lambda n : setattr(self, 'service_announcement', n.get_object_value(ServiceAnnouncement)),
             "sharepoint": lambda n : setattr(self, 'sharepoint', n.get_object_value(Sharepoint)),
+            "teams": lambda n : setattr(self, 'teams', n.get_object_value(TeamsAdminRoot)),
         }
         return fields
     
@@ -84,13 +102,16 @@ class Admin(AdditionalDataHolder, BackedModel, Parsable):
         """
         if writer is None:
             raise TypeError("writer cannot be null.")
+        writer.write_object_value("configurationManagement", self.configuration_management)
         writer.write_object_value("edge", self.edge)
+        writer.write_object_value("exchange", self.exchange)
         writer.write_object_value("microsoft365Apps", self.microsoft365_apps)
         writer.write_str_value("@odata.type", self.odata_type)
         writer.write_object_value("people", self.people)
         writer.write_object_value("reportSettings", self.report_settings)
         writer.write_object_value("serviceAnnouncement", self.service_announcement)
         writer.write_object_value("sharepoint", self.sharepoint)
+        writer.write_object_value("teams", self.teams)
         writer.write_additional_data_value(self.additional_data)
     
 

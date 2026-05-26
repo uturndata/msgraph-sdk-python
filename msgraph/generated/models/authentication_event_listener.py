@@ -12,9 +12,12 @@ if TYPE_CHECKING:
     from .on_attribute_collection_submit_listener import OnAttributeCollectionSubmitListener
     from .on_authentication_method_load_start_listener import OnAuthenticationMethodLoadStartListener
     from .on_email_otp_send_listener import OnEmailOtpSendListener
+    from .on_fraud_protection_load_start_listener import OnFraudProtectionLoadStartListener
     from .on_interactive_auth_flow_start_listener import OnInteractiveAuthFlowStartListener
+    from .on_password_submit_listener import OnPasswordSubmitListener
     from .on_token_issuance_start_listener import OnTokenIssuanceStartListener
     from .on_user_create_start_listener import OnUserCreateStartListener
+    from .on_verified_id_claim_validation_listener import OnVerifiedIdClaimValidationListener
 
 from .entity import Entity
 
@@ -24,6 +27,8 @@ class AuthenticationEventListener(Entity, Parsable):
     authentication_events_flow_id: Optional[str] = None
     # The conditions on which this authenticationEventListener should trigger.
     conditions: Optional[AuthenticationConditions] = None
+    # The display name of the listener.
+    display_name: Optional[str] = None
     # The OdataType property
     odata_type: Optional[str] = None
     
@@ -61,10 +66,18 @@ class AuthenticationEventListener(Entity, Parsable):
             from .on_email_otp_send_listener import OnEmailOtpSendListener
 
             return OnEmailOtpSendListener()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.onFraudProtectionLoadStartListener".casefold():
+            from .on_fraud_protection_load_start_listener import OnFraudProtectionLoadStartListener
+
+            return OnFraudProtectionLoadStartListener()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.onInteractiveAuthFlowStartListener".casefold():
             from .on_interactive_auth_flow_start_listener import OnInteractiveAuthFlowStartListener
 
             return OnInteractiveAuthFlowStartListener()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.onPasswordSubmitListener".casefold():
+            from .on_password_submit_listener import OnPasswordSubmitListener
+
+            return OnPasswordSubmitListener()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.onTokenIssuanceStartListener".casefold():
             from .on_token_issuance_start_listener import OnTokenIssuanceStartListener
 
@@ -73,6 +86,10 @@ class AuthenticationEventListener(Entity, Parsable):
             from .on_user_create_start_listener import OnUserCreateStartListener
 
             return OnUserCreateStartListener()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.onVerifiedIdClaimValidationListener".casefold():
+            from .on_verified_id_claim_validation_listener import OnVerifiedIdClaimValidationListener
+
+            return OnVerifiedIdClaimValidationListener()
         return AuthenticationEventListener()
     
     def get_field_deserializers(self,) -> dict[str, Callable[[ParseNode], None]]:
@@ -87,9 +104,12 @@ class AuthenticationEventListener(Entity, Parsable):
         from .on_attribute_collection_submit_listener import OnAttributeCollectionSubmitListener
         from .on_authentication_method_load_start_listener import OnAuthenticationMethodLoadStartListener
         from .on_email_otp_send_listener import OnEmailOtpSendListener
+        from .on_fraud_protection_load_start_listener import OnFraudProtectionLoadStartListener
         from .on_interactive_auth_flow_start_listener import OnInteractiveAuthFlowStartListener
+        from .on_password_submit_listener import OnPasswordSubmitListener
         from .on_token_issuance_start_listener import OnTokenIssuanceStartListener
         from .on_user_create_start_listener import OnUserCreateStartListener
+        from .on_verified_id_claim_validation_listener import OnVerifiedIdClaimValidationListener
 
         from .authentication_conditions import AuthenticationConditions
         from .entity import Entity
@@ -98,13 +118,17 @@ class AuthenticationEventListener(Entity, Parsable):
         from .on_attribute_collection_submit_listener import OnAttributeCollectionSubmitListener
         from .on_authentication_method_load_start_listener import OnAuthenticationMethodLoadStartListener
         from .on_email_otp_send_listener import OnEmailOtpSendListener
+        from .on_fraud_protection_load_start_listener import OnFraudProtectionLoadStartListener
         from .on_interactive_auth_flow_start_listener import OnInteractiveAuthFlowStartListener
+        from .on_password_submit_listener import OnPasswordSubmitListener
         from .on_token_issuance_start_listener import OnTokenIssuanceStartListener
         from .on_user_create_start_listener import OnUserCreateStartListener
+        from .on_verified_id_claim_validation_listener import OnVerifiedIdClaimValidationListener
 
         fields: dict[str, Callable[[Any], None]] = {
             "authenticationEventsFlowId": lambda n : setattr(self, 'authentication_events_flow_id', n.get_str_value()),
             "conditions": lambda n : setattr(self, 'conditions', n.get_object_value(AuthenticationConditions)),
+            "displayName": lambda n : setattr(self, 'display_name', n.get_str_value()),
         }
         super_fields = super().get_field_deserializers()
         fields.update(super_fields)
@@ -121,5 +145,6 @@ class AuthenticationEventListener(Entity, Parsable):
         super().serialize(writer)
         writer.write_str_value("authenticationEventsFlowId", self.authentication_events_flow_id)
         writer.write_object_value("conditions", self.conditions)
+        writer.write_str_value("displayName", self.display_name)
     
 

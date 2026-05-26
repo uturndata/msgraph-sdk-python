@@ -16,6 +16,7 @@ from warnings import warn
 if TYPE_CHECKING:
     from .....models.named_location import NamedLocation
     from .....models.o_data_errors.o_data_error import ODataError
+    from .restore.restore_request_builder import RestoreRequestBuilder
 
 class NamedLocationItemRequestBuilder(BaseRequestBuilder):
     """
@@ -32,10 +33,10 @@ class NamedLocationItemRequestBuilder(BaseRequestBuilder):
     
     async def delete(self,request_configuration: Optional[RequestConfiguration[QueryParameters]] = None) -> None:
         """
-        Delete an ipNamedLocation object.
+        Delete a countryNamedLocation object.
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: None
-        Find more info here: https://learn.microsoft.com/graph/api/ipnamedlocation-delete?view=graph-rest-1.0
+        Find more info here: https://learn.microsoft.com/graph/api/countrynamedlocation-delete?view=graph-rest-1.0
         """
         request_info = self.to_delete_request_information(
             request_configuration
@@ -72,11 +73,11 @@ class NamedLocationItemRequestBuilder(BaseRequestBuilder):
     
     async def patch(self,body: NamedLocation, request_configuration: Optional[RequestConfiguration[QueryParameters]] = None) -> Optional[NamedLocation]:
         """
-        Update the properties of an ipNamedLocation object.
+        Update the properties of a countryNamedLocation object.
         param body: The request body
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: Optional[NamedLocation]
-        Find more info here: https://learn.microsoft.com/graph/api/ipnamedlocation-update?view=graph-rest-1.0
+        Find more info here: https://learn.microsoft.com/graph/api/countrynamedlocation-update?view=graph-rest-1.0
         """
         if body is None:
             raise TypeError("body cannot be null.")
@@ -96,7 +97,7 @@ class NamedLocationItemRequestBuilder(BaseRequestBuilder):
     
     def to_delete_request_information(self,request_configuration: Optional[RequestConfiguration[QueryParameters]] = None) -> RequestInformation:
         """
-        Delete an ipNamedLocation object.
+        Delete a countryNamedLocation object.
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: RequestInformation
         """
@@ -118,7 +119,7 @@ class NamedLocationItemRequestBuilder(BaseRequestBuilder):
     
     def to_patch_request_information(self,body: NamedLocation, request_configuration: Optional[RequestConfiguration[QueryParameters]] = None) -> RequestInformation:
         """
-        Update the properties of an ipNamedLocation object.
+        Update the properties of a countryNamedLocation object.
         param body: The request body
         param request_configuration: Configuration for the request such as headers, query parameters, and middleware options.
         Returns: RequestInformation
@@ -140,6 +141,15 @@ class NamedLocationItemRequestBuilder(BaseRequestBuilder):
         if raw_url is None:
             raise TypeError("raw_url cannot be null.")
         return NamedLocationItemRequestBuilder(self.request_adapter, raw_url)
+    
+    @property
+    def restore(self) -> RestoreRequestBuilder:
+        """
+        Provides operations to call the restore method.
+        """
+        from .restore.restore_request_builder import RestoreRequestBuilder
+
+        return RestoreRequestBuilder(self.request_adapter, self.path_parameters)
     
     @dataclass
     class NamedLocationItemRequestBuilderDeleteRequestConfiguration(RequestConfiguration[QueryParameters]):

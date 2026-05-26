@@ -17,7 +17,7 @@ from .entity import Entity
 class CloudPcDeviceImage(Entity, Parsable):
     # The display name of the associated device image. The device image display name and the version are used to uniquely identify the Cloud PC device image. Read-only.
     display_name: Optional[str] = None
-    # The error code of the status of the image that indicates why the upload failed, if applicable. Possible values are: internalServerError, sourceImageNotFound, osVersionNotSupported, sourceImageInvalid, sourceImageNotGeneralized, unknownFutureValue, vmAlreadyAzureAdJoined, paidSourceImageNotSupport, sourceImageNotSupportCustomizeVMName, sourceImageSizeExceedsLimitation. Use the Prefer: include-unknown-enum-members request header to get the following values from this evolvable enum: vmAlreadyAzureAdJoined, paidSourceImageNotSupport, sourceImageNotSupportCustomizeVMName, sourceImageSizeExceedsLimitation. Read-only.
+    # The error code of the status of the image that indicates why the upload failed, if applicable. The possible values are: internalServerError, sourceImageNotFound, osVersionNotSupported, sourceImageInvalid, sourceImageNotGeneralized, unknownFutureValue, vmAlreadyAzureAdJoined, paidSourceImageNotSupport, sourceImageNotSupportCustomizeVMName, sourceImageSizeExceedsLimitation. Use the Prefer: include-unknown-enum-members request header to get the following values from this evolvable enum: vmAlreadyAzureAdJoined, paidSourceImageNotSupport, sourceImageNotSupportCustomizeVMName, sourceImageSizeExceedsLimitation. Read-only.
     error_code: Optional[CloudPcDeviceImageErrorCode] = None
     # The date when the image became unavailable. Read-only.
     expiration_date: Optional[datetime.date] = None
@@ -29,11 +29,15 @@ class CloudPcDeviceImage(Entity, Parsable):
     operating_system: Optional[str] = None
     # The OS build version of the image. For example, 1909. Read-only.
     os_build_number: Optional[str] = None
-    # The OS status of this image. Possible values are: supported, supportedWithWarning, unknown, unknownFutureValue. The default value is unknown. Read-only.
+    # The OS status of this image. The possible values are: supported, supportedWithWarning, unknown, unknownFutureValue. The default value is unknown. Read-only.
     os_status: Optional[CloudPcDeviceImageOsStatus] = None
+    # The operating system version of this image. For example, 10.0.22000.296. Read-only.
+    os_version_number: Optional[str] = None
+    # The size of the image in GB. For example, 64. Read-only.
+    size_in_g_b: Optional[int] = None
     # The unique identifier (ID) of the source image resource on Azure. The required ID format is: '/subscriptions/{subscription-id}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/images/{imageName}'. Read-only.
     source_image_resource_id: Optional[str] = None
-    # The status of the image on the Cloud PC. Possible values are: pending, ready, failed, unknownFutureValue. Read-only.
+    # The status of the image on the Cloud PC. The possible values are: pending, ready, failed, unknownFutureValue. Read-only.
     status: Optional[CloudPcDeviceImageStatus] = None
     # The image version. For example, 0.0.1 and 1.5.13. Read-only.
     version: Optional[str] = None
@@ -72,6 +76,8 @@ class CloudPcDeviceImage(Entity, Parsable):
             "operatingSystem": lambda n : setattr(self, 'operating_system', n.get_str_value()),
             "osBuildNumber": lambda n : setattr(self, 'os_build_number', n.get_str_value()),
             "osStatus": lambda n : setattr(self, 'os_status', n.get_enum_value(CloudPcDeviceImageOsStatus)),
+            "osVersionNumber": lambda n : setattr(self, 'os_version_number', n.get_str_value()),
+            "sizeInGB": lambda n : setattr(self, 'size_in_g_b', n.get_int_value()),
             "sourceImageResourceId": lambda n : setattr(self, 'source_image_resource_id', n.get_str_value()),
             "status": lambda n : setattr(self, 'status', n.get_enum_value(CloudPcDeviceImageStatus)),
             "version": lambda n : setattr(self, 'version', n.get_str_value()),
@@ -96,6 +102,8 @@ class CloudPcDeviceImage(Entity, Parsable):
         writer.write_str_value("operatingSystem", self.operating_system)
         writer.write_str_value("osBuildNumber", self.os_build_number)
         writer.write_enum_value("osStatus", self.os_status)
+        writer.write_str_value("osVersionNumber", self.os_version_number)
+        writer.write_int_value("sizeInGB", self.size_in_g_b)
         writer.write_str_value("sourceImageResourceId", self.source_image_resource_id)
         writer.write_enum_value("status", self.status)
         writer.write_str_value("version", self.version)

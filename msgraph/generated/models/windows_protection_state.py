@@ -20,9 +20,11 @@ class WindowsProtectionState(Entity, Parsable):
     """
     # Current anti malware version
     anti_malware_version: Optional[str] = None
+    # When TRUE indicates the Windows Defender controlled configuration feature is enabled, when FALSE indicates the Windows Defender controlled configuration feature is not enabled. Defaults to setting on client device.
+    controlled_configuration_enabled: Optional[bool] = None
     # Device malware list
     detected_malware_state: Optional[list[WindowsDeviceMalwareState]] = None
-    # Indicates device's health state. Possible values are: clean, fullScanPending, rebootPending, manualStepsPending, offlineScanPending, critical. Possible values are: clean, fullScanPending, rebootPending, manualStepsPending, offlineScanPending, critical.
+    # Indicates device's health state. The possible values are: clean, fullScanPending, rebootPending, manualStepsPending, offlineScanPending, critical. The possible values are: clean, fullScanPending, rebootPending, manualStepsPending, offlineScanPending, critical.
     device_state: Optional[WindowsDeviceHealthState] = None
     # Current endpoint protection engine's version
     engine_version: Optional[str] = None
@@ -48,7 +50,7 @@ class WindowsProtectionState(Entity, Parsable):
     network_inspection_system_enabled: Optional[bool] = None
     # The OdataType property
     odata_type: Optional[str] = None
-    # Product Status of Windows Defender Antivirus. Possible values are: noStatus, serviceNotRunning, serviceStartedWithoutMalwareProtection, pendingFullScanDueToThreatAction, pendingRebootDueToThreatAction, pendingManualStepsDueToThreatAction, avSignaturesOutOfDate, asSignaturesOutOfDate, noQuickScanHappenedForSpecifiedPeriod, noFullScanHappenedForSpecifiedPeriod, systemInitiatedScanInProgress, systemInitiatedCleanInProgress, samplesPendingSubmission, productRunningInEvaluationMode, productRunningInNonGenuineMode, productExpired, offlineScanRequired, serviceShutdownAsPartOfSystemShutdown, threatRemediationFailedCritically, threatRemediationFailedNonCritically, noStatusFlagsSet, platformOutOfDate, platformUpdateInProgress, platformAboutToBeOutdated, signatureOrPlatformEndOfLifeIsPastOrIsImpending, windowsSModeSignaturesInUseOnNonWin10SInstall. Possible values are: noStatus, serviceNotRunning, serviceStartedWithoutMalwareProtection, pendingFullScanDueToThreatAction, pendingRebootDueToThreatAction, pendingManualStepsDueToThreatAction, avSignaturesOutOfDate, asSignaturesOutOfDate, noQuickScanHappenedForSpecifiedPeriod, noFullScanHappenedForSpecifiedPeriod, systemInitiatedScanInProgress, systemInitiatedCleanInProgress, samplesPendingSubmission, productRunningInEvaluationMode, productRunningInNonGenuineMode, productExpired, offlineScanRequired, serviceShutdownAsPartOfSystemShutdown, threatRemediationFailedCritically, threatRemediationFailedNonCritically, noStatusFlagsSet, platformOutOfDate, platformUpdateInProgress, platformAboutToBeOutdated, signatureOrPlatformEndOfLifeIsPastOrIsImpending, windowsSModeSignaturesInUseOnNonWin10SInstall.
+    # Product Status of Windows Defender Antivirus. The possible values are: noStatus, serviceNotRunning, serviceStartedWithoutMalwareProtection, pendingFullScanDueToThreatAction, pendingRebootDueToThreatAction, pendingManualStepsDueToThreatAction, avSignaturesOutOfDate, asSignaturesOutOfDate, noQuickScanHappenedForSpecifiedPeriod, noFullScanHappenedForSpecifiedPeriod, systemInitiatedScanInProgress, systemInitiatedCleanInProgress, samplesPendingSubmission, productRunningInEvaluationMode, productRunningInNonGenuineMode, productExpired, offlineScanRequired, serviceShutdownAsPartOfSystemShutdown, threatRemediationFailedCritically, threatRemediationFailedNonCritically, noStatusFlagsSet, platformOutOfDate, platformUpdateInProgress, platformAboutToBeOutdated, signatureOrPlatformEndOfLifeIsPastOrIsImpending, windowsSModeSignaturesInUseOnNonWin10SInstall. The possible values are: noStatus, serviceNotRunning, serviceStartedWithoutMalwareProtection, pendingFullScanDueToThreatAction, pendingRebootDueToThreatAction, pendingManualStepsDueToThreatAction, avSignaturesOutOfDate, asSignaturesOutOfDate, noQuickScanHappenedForSpecifiedPeriod, noFullScanHappenedForSpecifiedPeriod, systemInitiatedScanInProgress, systemInitiatedCleanInProgress, samplesPendingSubmission, productRunningInEvaluationMode, productRunningInNonGenuineMode, productExpired, offlineScanRequired, serviceShutdownAsPartOfSystemShutdown, threatRemediationFailedCritically, threatRemediationFailedNonCritically, noStatusFlagsSet, platformOutOfDate, platformUpdateInProgress, platformAboutToBeOutdated, signatureOrPlatformEndOfLifeIsPastOrIsImpending, windowsSModeSignaturesInUseOnNonWin10SInstall.
     product_status: Optional[WindowsDefenderProductStatus] = None
     # When TRUE indicates quick scan is overdue, when FALSE indicates quick scan is not overdue. Defaults to setting on client device.
     quick_scan_overdue: Optional[bool] = None
@@ -91,6 +93,7 @@ class WindowsProtectionState(Entity, Parsable):
 
         fields: dict[str, Callable[[Any], None]] = {
             "antiMalwareVersion": lambda n : setattr(self, 'anti_malware_version', n.get_str_value()),
+            "controlledConfigurationEnabled": lambda n : setattr(self, 'controlled_configuration_enabled', n.get_bool_value()),
             "detectedMalwareState": lambda n : setattr(self, 'detected_malware_state', n.get_collection_of_object_values(WindowsDeviceMalwareState)),
             "deviceState": lambda n : setattr(self, 'device_state', n.get_collection_of_enum_values(WindowsDeviceHealthState)),
             "engineVersion": lambda n : setattr(self, 'engine_version', n.get_str_value()),
@@ -126,6 +129,7 @@ class WindowsProtectionState(Entity, Parsable):
             raise TypeError("writer cannot be null.")
         super().serialize(writer)
         writer.write_str_value("antiMalwareVersion", self.anti_malware_version)
+        writer.write_bool_value("controlledConfigurationEnabled", self.controlled_configuration_enabled)
         writer.write_collection_of_object_values("detectedMalwareState", self.detected_malware_state)
         writer.write_enum_value("deviceState", self.device_state)
         writer.write_str_value("engineVersion", self.engine_version)

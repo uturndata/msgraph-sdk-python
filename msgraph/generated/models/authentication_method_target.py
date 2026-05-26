@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from .authentication_method_target_type import AuthenticationMethodTargetType
     from .entity import Entity
     from .microsoft_authenticator_authentication_method_target import MicrosoftAuthenticatorAuthenticationMethodTarget
+    from .passkey_authentication_method_target import PasskeyAuthenticationMethodTarget
     from .sms_authentication_method_target import SmsAuthenticationMethodTarget
+    from .verifiable_credential_authentication_method_target import VerifiableCredentialAuthenticationMethodTarget
 
 from .entity import Entity
 
@@ -39,10 +41,18 @@ class AuthenticationMethodTarget(Entity, Parsable):
             from .microsoft_authenticator_authentication_method_target import MicrosoftAuthenticatorAuthenticationMethodTarget
 
             return MicrosoftAuthenticatorAuthenticationMethodTarget()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.passkeyAuthenticationMethodTarget".casefold():
+            from .passkey_authentication_method_target import PasskeyAuthenticationMethodTarget
+
+            return PasskeyAuthenticationMethodTarget()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.smsAuthenticationMethodTarget".casefold():
             from .sms_authentication_method_target import SmsAuthenticationMethodTarget
 
             return SmsAuthenticationMethodTarget()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.verifiableCredentialAuthenticationMethodTarget".casefold():
+            from .verifiable_credential_authentication_method_target import VerifiableCredentialAuthenticationMethodTarget
+
+            return VerifiableCredentialAuthenticationMethodTarget()
         return AuthenticationMethodTarget()
     
     def get_field_deserializers(self,) -> dict[str, Callable[[ParseNode], None]]:
@@ -53,12 +63,16 @@ class AuthenticationMethodTarget(Entity, Parsable):
         from .authentication_method_target_type import AuthenticationMethodTargetType
         from .entity import Entity
         from .microsoft_authenticator_authentication_method_target import MicrosoftAuthenticatorAuthenticationMethodTarget
+        from .passkey_authentication_method_target import PasskeyAuthenticationMethodTarget
         from .sms_authentication_method_target import SmsAuthenticationMethodTarget
+        from .verifiable_credential_authentication_method_target import VerifiableCredentialAuthenticationMethodTarget
 
         from .authentication_method_target_type import AuthenticationMethodTargetType
         from .entity import Entity
         from .microsoft_authenticator_authentication_method_target import MicrosoftAuthenticatorAuthenticationMethodTarget
+        from .passkey_authentication_method_target import PasskeyAuthenticationMethodTarget
         from .sms_authentication_method_target import SmsAuthenticationMethodTarget
+        from .verifiable_credential_authentication_method_target import VerifiableCredentialAuthenticationMethodTarget
 
         fields: dict[str, Callable[[Any], None]] = {
             "isRegistrationRequired": lambda n : setattr(self, 'is_registration_required', n.get_bool_value()),

@@ -16,10 +16,12 @@ from warnings import warn
 if TYPE_CHECKING:
     from ....models.o_data_errors.o_data_error import ODataError
     from ....models.user_settings import UserSettings
+    from .exchange.exchange_request_builder import ExchangeRequestBuilder
     from .item_insights.item_insights_request_builder import ItemInsightsRequestBuilder
     from .shift_preferences.shift_preferences_request_builder import ShiftPreferencesRequestBuilder
     from .storage.storage_request_builder import StorageRequestBuilder
     from .windows.windows_request_builder import WindowsRequestBuilder
+    from .work_hours_and_locations.work_hours_and_locations_request_builder import WorkHoursAndLocationsRequestBuilder
 
 class SettingsRequestBuilder(BaseRequestBuilder):
     """
@@ -143,6 +145,15 @@ class SettingsRequestBuilder(BaseRequestBuilder):
         return SettingsRequestBuilder(self.request_adapter, raw_url)
     
     @property
+    def exchange(self) -> ExchangeRequestBuilder:
+        """
+        Provides operations to manage the exchange property of the microsoft.graph.userSettings entity.
+        """
+        from .exchange.exchange_request_builder import ExchangeRequestBuilder
+
+        return ExchangeRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
     def item_insights(self) -> ItemInsightsRequestBuilder:
         """
         Provides operations to manage the itemInsights property of the microsoft.graph.userSettings entity.
@@ -177,6 +188,15 @@ class SettingsRequestBuilder(BaseRequestBuilder):
         from .windows.windows_request_builder import WindowsRequestBuilder
 
         return WindowsRequestBuilder(self.request_adapter, self.path_parameters)
+    
+    @property
+    def work_hours_and_locations(self) -> WorkHoursAndLocationsRequestBuilder:
+        """
+        Provides operations to manage the workHoursAndLocations property of the microsoft.graph.userSettings entity.
+        """
+        from .work_hours_and_locations.work_hours_and_locations_request_builder import WorkHoursAndLocationsRequestBuilder
+
+        return WorkHoursAndLocationsRequestBuilder(self.request_adapter, self.path_parameters)
     
     @dataclass
     class SettingsRequestBuilderDeleteRequestConfiguration(RequestConfiguration[QueryParameters]):

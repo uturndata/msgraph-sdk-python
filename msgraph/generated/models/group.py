@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from .license_processing_state import LicenseProcessingState
     from .onenote import Onenote
     from .on_premises_provisioning_error import OnPremisesProvisioningError
+    from .on_premises_sync_behavior import OnPremisesSyncBehavior
     from .planner_group import PlannerGroup
     from .profile_photo import ProfilePhoto
     from .resource_specific_permission_grant import ResourceSpecificPermissionGrant
@@ -39,15 +40,15 @@ class Group(DirectoryObject, Parsable):
     odata_type: Optional[str] = "#microsoft.graph.group"
     # The list of users or groups allowed to create posts or calendar events in this group. If this list is nonempty, then only users or groups listed here are allowed to post.
     accepted_senders: Optional[list[DirectoryObject]] = None
-    # Indicates if people external to the organization can send messages to the group. The default value is false. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # Indicates if people external to the organization can send messages to the group. The default value is false. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     allow_external_senders: Optional[bool] = None
     # Represents the app roles granted to a group for an application. Supports $expand.
     app_role_assignments: Optional[list[AppRoleAssignment]] = None
-    # The list of sensitivity label pairs (label ID, label name) associated with a Microsoft 365 group. Returned only on $select. This property can be updated only in delegated scenarios where the caller requires both the Microsoft Graph permission and a supported administrator role.
+    # The list of sensitivity label pairs (label ID, label name) associated with a Microsoft 365 group. Requires $select to retrieve. This property can be updated only in delegated scenarios where the caller requires both the Microsoft Graph permission and a supported administrator role.
     assigned_labels: Optional[list[AssignedLabel]] = None
-    # The licenses that are assigned to the group. Returned only on $select. Supports $filter (eq). Read-only.
+    # The licenses that are assigned to the group. Requires $select to retrieve. Supports $filter (eq). Read-only.
     assigned_licenses: Optional[list[AssignedLicense]] = None
-    # Indicates if new members added to the group are autosubscribed to receive email notifications. You can set this property in a PATCH request for the group; don't set it in the initial POST request that creates the group. Default value is false. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # Indicates if new members added to the group are autosubscribed to receive email notifications. You can set this property in a PATCH request for the group; don't set it in the initial POST request that creates the group. Default value is false. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     auto_subscribe_new_members: Optional[bool] = None
     # The group's calendar. Read-only.
     calendar: Optional[Calendar] = None
@@ -81,19 +82,21 @@ class Group(DirectoryObject, Parsable):
     group_types: Optional[list[str]] = None
     # Indicates whether there are members in this group that have license errors from its group-based license assignment. This property is never returned on a GET operation. You can use it as a $filter argument to get groups that have members with license errors (that is, filter for this property being true). See an example. Supports $filter (eq).
     has_members_with_license_errors: Optional[bool] = None
-    # True if the group isn't displayed in certain parts of the Outlook UI: the Address Book, address lists for selecting message recipients, and the Browse Groups dialog for searching groups; otherwise, false. The default value is false. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # True if the group isn't displayed in certain parts of the Outlook UI: the Address Book, address lists for selecting message recipients, and the Browse Groups dialog for searching groups; otherwise, false. The default value is false. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     hide_from_address_lists: Optional[bool] = None
-    # True if the group isn't displayed in Outlook clients, such as Outlook for Windows and Outlook on the web; otherwise, false. The default value is false. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # True if the group isn't displayed in Outlook clients, such as Outlook for Windows and Outlook on the web; otherwise, false. The default value is false. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     hide_from_outlook_clients: Optional[bool] = None
+    # The infoCatalogs property
+    info_catalogs: Optional[list[str]] = None
     # When a group is associated with a team, this property determines whether the team is in read-only mode.To read this property, use the /group/{groupId}/team endpoint or the Get team API. To update this property, use the archiveTeam and unarchiveTeam APIs.
     is_archived: Optional[bool] = None
     # Indicates whether this group can be assigned to a Microsoft Entra role. Optional. This property can only be set while creating the group and is immutable. If set to true, the securityEnabled property must also be set to true, visibility must be Hidden, and the group can't be a dynamic group (that is, groupTypes can't contain DynamicMembership). Only callers with at least the Privileged Role Administrator role can set this property. The caller must also be assigned the RoleManagement.ReadWrite.Directory permission to set this property or update the membership of such groups. For more, see Using a group to manage Microsoft Entra role assignmentsUsing this feature requires a Microsoft Entra ID P1 license. Returned by default. Supports $filter (eq, ne, not).
     is_assignable_to_role: Optional[bool] = None
-    # Indicates whether the group is a member of a restricted management administrative unit. If not set, the default value is null and the default behavior is false. Read-only.  To manage a group member of a restricted management administrative unit, the administrator or calling app must be assigned a Microsoft Entra role at the scope of the restricted management administrative unit. Returned only on $select.
+    # Indicates whether the group is a member of a restricted management administrative unit. If not set, the default value is null and the default behavior is false. Read-only.  To manage a group member of a restricted management administrative unit, the administrator or calling app must be assigned a Microsoft Entra role at the scope of the restricted management administrative unit. Requires $select to retrieve.
     is_management_restricted: Optional[bool] = None
-    # Indicates whether the signed-in user is subscribed to receive email conversations. The default value is true. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # Indicates whether the signed-in user is subscribed to receive email conversations. The default value is true. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     is_subscribed_by_mail: Optional[bool] = None
-    # Indicates the status of the group license assignment to all group members. The default value is false. Read-only. Possible values: QueuedForProcessing, ProcessingInProgress, and ProcessingComplete.Returned only on $select. Read-only.
+    # Indicates the status of the group license assignment to all group members. The default value is false. Read-only. Possible values: QueuedForProcessing, ProcessingInProgress, and ProcessingComplete.Requires $select to retrieve. Read-only.
     license_processing_state: Optional[LicenseProcessingState] = None
     # The SMTP address for the group, for example, 'serviceadmins@contoso.com'. Returned by default. Read-only. Supports $filter (eq, ne, not, ge, le, in, startsWith, and eq on null values).
     mail: Optional[str] = None
@@ -123,6 +126,8 @@ class Group(DirectoryObject, Parsable):
     on_premises_sam_account_name: Optional[str] = None
     # Contains the on-premises security identifier (SID) for the group synchronized from on-premises to the cloud. Read-only. Returned by default. Supports $filter (eq including on null values).
     on_premises_security_identifier: Optional[str] = None
+    # The onPremisesSyncBehavior property
+    on_premises_sync_behavior: Optional[OnPremisesSyncBehavior] = None
     # true if this group is synced from an on-premises directory; false if this group was originally synced from an on-premises directory but is no longer synced; null if this object has never synced from an on-premises directory (default). Returned by default. Read-only. Supports $filter (eq, ne, not, in, and eq on null values).
     on_premises_sync_enabled: Optional[bool] = None
     # The onenote property
@@ -147,6 +152,10 @@ class Group(DirectoryObject, Parsable):
     rejected_senders: Optional[list[DirectoryObject]] = None
     # Timestamp of when the group was last renewed. This value can't be modified directly and is only updated via the renew service action. The Timestamp type represents date and time information using ISO 8601 format and is always in UTC. For example, midnight UTC on January 1, 2014 is 2014-01-01T00:00:00Z. Returned by default. Supports $filter (eq, ne, not, ge, le, in). Read-only.
     renewed_date_time: Optional[datetime.datetime] = None
+    # Specifies the group behaviors that can be set for a Microsoft 365 group during creation. This property can be set only as part of creation (POST). For the list of possible values, see Microsoft 365 group behaviors and provisioning options.
+    resource_behavior_options: Optional[list[str]] = None
+    # Specifies the group resources that are associated with the Microsoft 365 group. The possible value is Team. For more information, see Microsoft 365 group behaviors and provisioning options. Returned by default. Supports $filter (eq, not, startsWith).
+    resource_provisioning_options: Optional[list[str]] = None
     # Specifies whether the group is a security group. Required. Returned by default. Supports $filter (eq, ne, not, in).
     security_enabled: Optional[bool] = None
     # Security identifier of the group, used in Windows scenarios. Read-only. Returned by default.
@@ -169,10 +178,12 @@ class Group(DirectoryObject, Parsable):
     transitive_members: Optional[list[DirectoryObject]] = None
     # The unique identifier that can be assigned to a group and used as an alternate key. Immutable. Read-only.
     unique_name: Optional[str] = None
-    # Count of conversations that received new posts since the signed-in user last visited the group. Returned only on $select. Supported only on the Get group API (GET /groups/{ID}).
+    # Count of conversations that received new posts since the signed-in user last visited the group. Requires $select to retrieve. Supported only on the Get group API (GET /groups/{ID}).
     unseen_count: Optional[int] = None
-    # Specifies the group join policy and group content visibility for groups. Possible values are: Private, Public, or HiddenMembership. HiddenMembership can be set only for Microsoft 365 groups when the groups are created. It can't be updated later. Other values of visibility can be updated after group creation. If visibility value isn't specified during group creation on Microsoft Graph, a security group is created as Private by default, and the Microsoft 365 group is Public. Groups assignable to roles are always Private. To learn more, see group visibility options. Returned by default. Nullable.
+    # Specifies the group join policy and group content visibility for groups. The possible values are: Private, Public, or HiddenMembership. HiddenMembership can be set only for Microsoft 365 groups when the groups are created. It can't be updated later. Other values of visibility can be updated after group creation. If visibility value isn't specified during group creation on Microsoft Graph, a security group is created as Private by default, and the Microsoft 365 group is Public. Groups assignable to roles are always Private. To learn more, see group visibility options. Returned by default. Nullable.
     visibility: Optional[str] = None
+    # The welcomeMessageEnabled property
+    welcome_message_enabled: Optional[bool] = None
     
     @staticmethod
     def create_from_discriminator_value(parse_node: ParseNode) -> Group:
@@ -205,6 +216,7 @@ class Group(DirectoryObject, Parsable):
         from .license_processing_state import LicenseProcessingState
         from .onenote import Onenote
         from .on_premises_provisioning_error import OnPremisesProvisioningError
+        from .on_premises_sync_behavior import OnPremisesSyncBehavior
         from .planner_group import PlannerGroup
         from .profile_photo import ProfilePhoto
         from .resource_specific_permission_grant import ResourceSpecificPermissionGrant
@@ -227,6 +239,7 @@ class Group(DirectoryObject, Parsable):
         from .license_processing_state import LicenseProcessingState
         from .onenote import Onenote
         from .on_premises_provisioning_error import OnPremisesProvisioningError
+        from .on_premises_sync_behavior import OnPremisesSyncBehavior
         from .planner_group import PlannerGroup
         from .profile_photo import ProfilePhoto
         from .resource_specific_permission_grant import ResourceSpecificPermissionGrant
@@ -259,6 +272,7 @@ class Group(DirectoryObject, Parsable):
             "hasMembersWithLicenseErrors": lambda n : setattr(self, 'has_members_with_license_errors', n.get_bool_value()),
             "hideFromAddressLists": lambda n : setattr(self, 'hide_from_address_lists', n.get_bool_value()),
             "hideFromOutlookClients": lambda n : setattr(self, 'hide_from_outlook_clients', n.get_bool_value()),
+            "infoCatalogs": lambda n : setattr(self, 'info_catalogs', n.get_collection_of_primitive_values(str)),
             "isArchived": lambda n : setattr(self, 'is_archived', n.get_bool_value()),
             "isAssignableToRole": lambda n : setattr(self, 'is_assignable_to_role', n.get_bool_value()),
             "isManagementRestricted": lambda n : setattr(self, 'is_management_restricted', n.get_bool_value()),
@@ -278,6 +292,7 @@ class Group(DirectoryObject, Parsable):
             "onPremisesProvisioningErrors": lambda n : setattr(self, 'on_premises_provisioning_errors', n.get_collection_of_object_values(OnPremisesProvisioningError)),
             "onPremisesSamAccountName": lambda n : setattr(self, 'on_premises_sam_account_name', n.get_str_value()),
             "onPremisesSecurityIdentifier": lambda n : setattr(self, 'on_premises_security_identifier', n.get_str_value()),
+            "onPremisesSyncBehavior": lambda n : setattr(self, 'on_premises_sync_behavior', n.get_object_value(OnPremisesSyncBehavior)),
             "onPremisesSyncEnabled": lambda n : setattr(self, 'on_premises_sync_enabled', n.get_bool_value()),
             "onenote": lambda n : setattr(self, 'onenote', n.get_object_value(Onenote)),
             "owners": lambda n : setattr(self, 'owners', n.get_collection_of_object_values(DirectoryObject)),
@@ -290,6 +305,8 @@ class Group(DirectoryObject, Parsable):
             "proxyAddresses": lambda n : setattr(self, 'proxy_addresses', n.get_collection_of_primitive_values(str)),
             "rejectedSenders": lambda n : setattr(self, 'rejected_senders', n.get_collection_of_object_values(DirectoryObject)),
             "renewedDateTime": lambda n : setattr(self, 'renewed_date_time', n.get_datetime_value()),
+            "resourceBehaviorOptions": lambda n : setattr(self, 'resource_behavior_options', n.get_collection_of_primitive_values(str)),
+            "resourceProvisioningOptions": lambda n : setattr(self, 'resource_provisioning_options', n.get_collection_of_primitive_values(str)),
             "securityEnabled": lambda n : setattr(self, 'security_enabled', n.get_bool_value()),
             "securityIdentifier": lambda n : setattr(self, 'security_identifier', n.get_str_value()),
             "serviceProvisioningErrors": lambda n : setattr(self, 'service_provisioning_errors', n.get_collection_of_object_values(ServiceProvisioningError)),
@@ -303,6 +320,7 @@ class Group(DirectoryObject, Parsable):
             "uniqueName": lambda n : setattr(self, 'unique_name', n.get_str_value()),
             "unseenCount": lambda n : setattr(self, 'unseen_count', n.get_int_value()),
             "visibility": lambda n : setattr(self, 'visibility', n.get_str_value()),
+            "welcomeMessageEnabled": lambda n : setattr(self, 'welcome_message_enabled', n.get_bool_value()),
         }
         super_fields = super().get_field_deserializers()
         fields.update(super_fields)
@@ -341,6 +359,7 @@ class Group(DirectoryObject, Parsable):
         writer.write_bool_value("hasMembersWithLicenseErrors", self.has_members_with_license_errors)
         writer.write_bool_value("hideFromAddressLists", self.hide_from_address_lists)
         writer.write_bool_value("hideFromOutlookClients", self.hide_from_outlook_clients)
+        writer.write_collection_of_primitive_values("infoCatalogs", self.info_catalogs)
         writer.write_bool_value("isArchived", self.is_archived)
         writer.write_bool_value("isAssignableToRole", self.is_assignable_to_role)
         writer.write_bool_value("isManagementRestricted", self.is_management_restricted)
@@ -360,6 +379,7 @@ class Group(DirectoryObject, Parsable):
         writer.write_collection_of_object_values("onPremisesProvisioningErrors", self.on_premises_provisioning_errors)
         writer.write_str_value("onPremisesSamAccountName", self.on_premises_sam_account_name)
         writer.write_str_value("onPremisesSecurityIdentifier", self.on_premises_security_identifier)
+        writer.write_object_value("onPremisesSyncBehavior", self.on_premises_sync_behavior)
         writer.write_bool_value("onPremisesSyncEnabled", self.on_premises_sync_enabled)
         writer.write_object_value("onenote", self.onenote)
         writer.write_collection_of_object_values("owners", self.owners)
@@ -372,6 +392,8 @@ class Group(DirectoryObject, Parsable):
         writer.write_collection_of_primitive_values("proxyAddresses", self.proxy_addresses)
         writer.write_collection_of_object_values("rejectedSenders", self.rejected_senders)
         writer.write_datetime_value("renewedDateTime", self.renewed_date_time)
+        writer.write_collection_of_primitive_values("resourceBehaviorOptions", self.resource_behavior_options)
+        writer.write_collection_of_primitive_values("resourceProvisioningOptions", self.resource_provisioning_options)
         writer.write_bool_value("securityEnabled", self.security_enabled)
         writer.write_str_value("securityIdentifier", self.security_identifier)
         writer.write_collection_of_object_values("serviceProvisioningErrors", self.service_provisioning_errors)
@@ -385,5 +407,6 @@ class Group(DirectoryObject, Parsable):
         writer.write_str_value("uniqueName", self.unique_name)
         writer.write_int_value("unseenCount", self.unseen_count)
         writer.write_str_value("visibility", self.visibility)
+        writer.write_bool_value("welcomeMessageEnabled", self.welcome_message_enabled)
     
 

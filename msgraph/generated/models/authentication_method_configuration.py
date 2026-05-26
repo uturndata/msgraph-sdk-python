@@ -9,11 +9,14 @@ if TYPE_CHECKING:
     from .email_authentication_method_configuration import EmailAuthenticationMethodConfiguration
     from .entity import Entity
     from .exclude_target import ExcludeTarget
+    from .external_authentication_method_configuration import ExternalAuthenticationMethodConfiguration
     from .fido2_authentication_method_configuration import Fido2AuthenticationMethodConfiguration
     from .microsoft_authenticator_authentication_method_configuration import MicrosoftAuthenticatorAuthenticationMethodConfiguration
+    from .qr_code_pin_authentication_method_configuration import QrCodePinAuthenticationMethodConfiguration
     from .sms_authentication_method_configuration import SmsAuthenticationMethodConfiguration
     from .software_oath_authentication_method_configuration import SoftwareOathAuthenticationMethodConfiguration
     from .temporary_access_pass_authentication_method_configuration import TemporaryAccessPassAuthenticationMethodConfiguration
+    from .verifiable_credentials_authentication_method_configuration import VerifiableCredentialsAuthenticationMethodConfiguration
     from .voice_authentication_method_configuration import VoiceAuthenticationMethodConfiguration
     from .x509_certificate_authentication_method_configuration import X509CertificateAuthenticationMethodConfiguration
 
@@ -25,7 +28,7 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
     exclude_targets: Optional[list[ExcludeTarget]] = None
     # The OdataType property
     odata_type: Optional[str] = None
-    # The state of the policy. Possible values are: enabled, disabled.
+    # The state of the policy. The possible values are: enabled, disabled.
     state: Optional[AuthenticationMethodState] = None
     
     @staticmethod
@@ -46,6 +49,10 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
             from .email_authentication_method_configuration import EmailAuthenticationMethodConfiguration
 
             return EmailAuthenticationMethodConfiguration()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.externalAuthenticationMethodConfiguration".casefold():
+            from .external_authentication_method_configuration import ExternalAuthenticationMethodConfiguration
+
+            return ExternalAuthenticationMethodConfiguration()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.fido2AuthenticationMethodConfiguration".casefold():
             from .fido2_authentication_method_configuration import Fido2AuthenticationMethodConfiguration
 
@@ -54,6 +61,10 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
             from .microsoft_authenticator_authentication_method_configuration import MicrosoftAuthenticatorAuthenticationMethodConfiguration
 
             return MicrosoftAuthenticatorAuthenticationMethodConfiguration()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.qrCodePinAuthenticationMethodConfiguration".casefold():
+            from .qr_code_pin_authentication_method_configuration import QrCodePinAuthenticationMethodConfiguration
+
+            return QrCodePinAuthenticationMethodConfiguration()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.smsAuthenticationMethodConfiguration".casefold():
             from .sms_authentication_method_configuration import SmsAuthenticationMethodConfiguration
 
@@ -66,6 +77,10 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
             from .temporary_access_pass_authentication_method_configuration import TemporaryAccessPassAuthenticationMethodConfiguration
 
             return TemporaryAccessPassAuthenticationMethodConfiguration()
+        if mapping_value and mapping_value.casefold() == "#microsoft.graph.verifiableCredentialsAuthenticationMethodConfiguration".casefold():
+            from .verifiable_credentials_authentication_method_configuration import VerifiableCredentialsAuthenticationMethodConfiguration
+
+            return VerifiableCredentialsAuthenticationMethodConfiguration()
         if mapping_value and mapping_value.casefold() == "#microsoft.graph.voiceAuthenticationMethodConfiguration".casefold():
             from .voice_authentication_method_configuration import VoiceAuthenticationMethodConfiguration
 
@@ -85,11 +100,14 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
         from .email_authentication_method_configuration import EmailAuthenticationMethodConfiguration
         from .entity import Entity
         from .exclude_target import ExcludeTarget
+        from .external_authentication_method_configuration import ExternalAuthenticationMethodConfiguration
         from .fido2_authentication_method_configuration import Fido2AuthenticationMethodConfiguration
         from .microsoft_authenticator_authentication_method_configuration import MicrosoftAuthenticatorAuthenticationMethodConfiguration
+        from .qr_code_pin_authentication_method_configuration import QrCodePinAuthenticationMethodConfiguration
         from .sms_authentication_method_configuration import SmsAuthenticationMethodConfiguration
         from .software_oath_authentication_method_configuration import SoftwareOathAuthenticationMethodConfiguration
         from .temporary_access_pass_authentication_method_configuration import TemporaryAccessPassAuthenticationMethodConfiguration
+        from .verifiable_credentials_authentication_method_configuration import VerifiableCredentialsAuthenticationMethodConfiguration
         from .voice_authentication_method_configuration import VoiceAuthenticationMethodConfiguration
         from .x509_certificate_authentication_method_configuration import X509CertificateAuthenticationMethodConfiguration
 
@@ -97,11 +115,14 @@ class AuthenticationMethodConfiguration(Entity, Parsable):
         from .email_authentication_method_configuration import EmailAuthenticationMethodConfiguration
         from .entity import Entity
         from .exclude_target import ExcludeTarget
+        from .external_authentication_method_configuration import ExternalAuthenticationMethodConfiguration
         from .fido2_authentication_method_configuration import Fido2AuthenticationMethodConfiguration
         from .microsoft_authenticator_authentication_method_configuration import MicrosoftAuthenticatorAuthenticationMethodConfiguration
+        from .qr_code_pin_authentication_method_configuration import QrCodePinAuthenticationMethodConfiguration
         from .sms_authentication_method_configuration import SmsAuthenticationMethodConfiguration
         from .software_oath_authentication_method_configuration import SoftwareOathAuthenticationMethodConfiguration
         from .temporary_access_pass_authentication_method_configuration import TemporaryAccessPassAuthenticationMethodConfiguration
+        from .verifiable_credentials_authentication_method_configuration import VerifiableCredentialsAuthenticationMethodConfiguration
         from .voice_authentication_method_configuration import VoiceAuthenticationMethodConfiguration
         from .x509_certificate_authentication_method_configuration import X509CertificateAuthenticationMethodConfiguration
 
